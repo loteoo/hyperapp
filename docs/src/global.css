@@ -90,7 +90,8 @@ h1 a {
 
 pre {
   padding: 0 !important;
-  background-color: white !important;
+  text-shadow: none !important;
+  background-color: transparent !important;
 }
 
 code {
@@ -98,7 +99,13 @@ code {
   color: var(--dark-blue) !important;
   font-family: 'Fira Code', monospace !important;
   font-size: 1rem !important;
-  background-color: white !important;
-  padding: 0 !important;
+  padding: 0.25rem 0.5rem !important;
+  background-color: #f6f8fa !important;
+  text-shadow: none !important;
+}
+
+pre code {
+  display: block !important;
+  padding: 1rem !important;
 }
 
