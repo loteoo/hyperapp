@@ -242,14 +242,11 @@ caption {
   color: var(--dark-blue);
   font-weight: 500;
 }
-th {
+th, td {
   color: var(--dark-blue);
-  font-weight: normal;
-  padding: 0.5rem;
+  padding: 0.25rem 0.5rem;
   text-align: left;
-}
-td {
-  padding: 0.5rem;
+  border: 1px solid #dfe2e5;
 }
 
 

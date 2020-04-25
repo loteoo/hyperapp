@@ -1,41 +1,34 @@
 # API reference
-#### Quick overview of hyperapp's core API
+#### Quick overview of hyperapp's core APIs
 
 - [`h()`](#h)
 - [`app()`](#app)
-  - [init](#init)
-  - [view](#view)
-  - [subscriptions](#subscriptions)
-  - [node](#node)
 - [`Lazy()`](#lazy)
-- [actions](#actions)
-- [effects](#effects)
-
+- [Actions](#actions)
+- [Effects](#effects)
+- [Subscriptions](#subscriptions)
 
 ## h()
+
 `h(type, props, ...children)`
 
 Hyperscript function to create virtual DOM nodes (VNodes).  
 
-`type` is the name of the node, eg: `div`, `h1`, `button`, etc.
+**`type`** - Name of the node, eg: `div`, `h1`, `button`, etc.   
+**`props`** - Object containing HTML or SVG attributes you want your node to have.  
+**`children`** - Array of child VNodes.  
 
-`props` is an object containing HTML or SVG attributes you want your node to have.
-
-`children` is an array of child VNodes.
-
-A VNode is a simplified representation of a DOM element to be created.
-
-A tree of VNodes is a virtual DOM.
+A VNode is a simplified representation of a DOM element to be created. A tree of VNodes is a virtual DOM.
 
 ```javascript
-import { h } from 'hyperapp';
+import { h } from "hyperapp";
 
-h('div', { id: 'box' }, [
-  h('h1', {}, 'Hello!'),
-  h('p', {}, `Current year is ${new Date().getFullYear()}.`),
+h("div", { id: "box" }, [
+  h("h1", {}, "Hello!"),
+  h("p", {}, `Current year is ${new Date().getFullYear()}.`),
 ])
 ```
-The code above returns the following tree
+The code above returns the following virtual DOM (abridged for clarity)
 ```javascript
 {
   name: "div",
@@ -56,7 +49,7 @@ The code above returns the following tree
   ]
 }
 ```
-Which hyperapp will render to
+Which hyperapp renders to
 ```html
 <div id="box">
   <h1>Hello!</h1>
@@ -71,35 +64,63 @@ Which hyperapp will render to
 
 Initialize an hyperapp app using the given options.
 
-`init` is an [Action](#actions) to initialize the app's state. It can be the initial state itself or an action that returns it.
+**`init`** - [Action](#actions) to initialize the app's state. Can be the initial state itself or a function that returns it. Can also kick off [Effects](#effects).   
+**`view`** - Function that returns a virtual DOM for a given state. It maps your state to a UI that hyperapp renders.   
+**`subscriptions`** - Array of [subscriptions](#subscriptions) to subscribe to.   
+**`node`** - DOM element to render the virtual DOM on. Also known as the application container or the mount node.   
 
-`view` is a function that return the virtual DOM for a given state. It maps your state to a UI you want hyperapp to render.
+```javascript
+import { app } from "hyperapp";
+// ...
+app({
+  
+  // Possible usages for init:
+  init: state,
+  init: Action,
+  init: [state, Effect],
+  init: [Action, Effect],
 
-`subscriptions` is an array of [subscriptions](#subscriptions) to subscribe to.
-
-`node` DOM element to render the virtual DOM on. Also known as the application container.
-
+  view: View,
+  node: document.getElementById("app"),
+  subscriptions: (state) => [
+    SomeSubscription
+  ]
+});
+```
 
 
 
 ## Lazy()
 
+`Lazy({ render, ...props })`
+
+Higher order function to memoize view functions.
+
+**`render`** - Function that returns a virtual DOM. *Must be a named function.*   
+**`...props`** - Props to pass down to the view function. The underlying view is only re-computed when those change.   
+
+```javascript
+import { Lazy } from "hyperapp"
+import { Foo } from "./components/foo"
+
+const LazyFoo = props =>
+  Lazy({
+    render: Foo,
+    key: "unique-key",
+    foo: props.foo,
+    bar: props.bar
+  })
+```
 
 
-
-
-## actions
+## Actions
 
 Actions describe the transitions between the states of your app.
 
-You write them as pure, deterministic functions that produce no side-effects.
+You write them as pure, deterministic functions that produce no side-effects. They are dispatched in response to DOM events in your app, by an effect or by a subscription. They come in two forms:   
 
-They are dispatched in response to DOM events in your app, or by an effect.
-
-They come in two forms:
-
-#### Simple action: `state => nextState`
-No parameters, next state is determined just based on the previous state.
+**Simple action: `state => nextState`**   
+No parameters, next state is determined entirely on the previous state.
 
 ```javascript
 // Simple action
@@ -109,7 +130,7 @@ const Increment = (state) => state + 1
 <button onclick={Increment}>+</button>
 ```
 
-#### Complex action: `(state, params) => nextState`
+**Complex action: `(state, params) => nextState`**   
 Action with parameters along with the previous state.
 ```javascript
 // Complex action
@@ -121,33 +142,46 @@ const IncrementBy = (state, by) => state + by
 
 
 
-## effects
+## Effects
+
 `[fx, params]`
+
 Tuples that represent a side-effect that needs to run. Effects do not execute code, they represent code that needs to be executed.
-The first value `fx` is an effect runner. 
+
+The first value `fx` is an effect runner.   
 The second value `params` is data passed to the effect runner.
 
-#### Effect runner
-Function with the signature `(dispatch, params) => void`.
-Can dispatch an Action when complete.
-It executes your side effect outside of hyperapp and 
-```javascript
-const fx = (dispatch, params) => {
+**Effect runner `fx`**
 
-  // Do side effects
+`(dispatch, params) => void`.
+
+Executes your side effect outside of hyperapp and can dispatch an Action when complete.
+
+```javascript
+// Effect runner
+const fooFx = (dispatch, params) => {
+  console.log(params) // Do side effects
+  dispatch(SomeAction) // Optionnally dispatch an action
 }
 
-// Usage in the view, using an "Action tuple"
-<button onclick={[fx, 5]}>+5</button>
+// Helper to easily create the effect tuple
+const foo = params => [fooFx, params]
+
+// Usage in the view
+<button onclick={foo('bar')}>do foo</button>
 ```
 
 
-## subscriptions
+
+
+## Subscriptions
+
+Bonjour
 
 ```javascript
 const fx = (a) => (b) => [a, b]
 
-export const Sub = fx((dispatch, props) => {
+const Sub = fx((dispatch, props) => {
   // Subscribe
   return () => {
     // Unsubscribe
