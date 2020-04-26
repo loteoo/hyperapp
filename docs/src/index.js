@@ -65,7 +65,7 @@ app({
       </div>
     )
   },
-  node: document.getElementById('app'),
+  node: document.getElementById('app-container'),
   subscriptions: () => [
     WindowScrolled({ action: WindowScroll }),
     PopState({ action: ParseUrl })

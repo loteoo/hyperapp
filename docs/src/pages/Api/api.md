@@ -146,14 +146,14 @@ const IncrementBy = (state, by) => state + by
 
 `[fx, params]`
 
-Tuples that represent a side-effect that needs to run. Effects do not execute code, they represent code that needs to be executed.
+Tuples that describe a side-effect that needs to run. Effects do not execute code, they represent code that needs to be executed.
 
 **`fx`** - Effect runner.   
-**`params`** is data passed to the effect runner.
+**`params`** Data to be passed to the effect runner.
 
 **Effect runner `(dispatch, params) => void`**
 
-Executes your side effect outside of hyperapp and can dispatch an Action when complete.
+Executes your side effect outside of hyperapp and can dispatch an [Action](#actions) when it completes.
 
 ```javascript
 // Effect runner
@@ -162,11 +162,11 @@ const fooFx = (dispatch, params) => {
   dispatch(SomeAction) // Optionnally dispatch an action
 }
 
-// Helper to easily create the effect tuple for the foo effect
-const foo = params => [fooFx, params]
+// Helper to easily create the effect tuple for the Foo effect
+const Foo = params => [fooFx, params]
 
 // Usage in the view
-<button onclick={[state, foo('bar')]}>do foo</button>
+<button onclick={[state, Foo('bar')]}>do foo</button>
 ```
 
 
@@ -174,16 +174,41 @@ const foo = params => [fooFx, params]
 
 ## Subscriptions
 
+`[sub, params]`
 
+Tuples that describe bindings to external events.
+
+**`sub`** - Subscription configurator.   
+**`params`** Data to be passed to the configurator.
+
+**Subscription configurator `(dispatch, params) => cleanupFunction`**
+
+Binds `dispatch` to an external event. Returns a cleanup function that removes the binding.
 
 ```javascript
-const fx = (a) => (b) => [a, b]
+// Subscription configurator
+const fooSub = (dispatch, params) => {
 
-const Sub = fx((dispatch, props) => {
-  // Subscribe
-  return () => {
-    // Unsubscribe
-  }
+  // Hook up dispatch to an external event
+  const handler = (eventData) => dispatch([params.action, eventData])
+  window.addEventListener('someEvent', handler)
+  
+  // Cleanup function
+  return () => window.removeEventListener('someEvent', handler)
+}
+
+// Helper to easily create the subscription tuple for the Foo subscription
+const Foo = params => [fooSub, params]
+
+// Usage in app
+app({
+  // ...
+  subscriptions: state => [
+    Foo({
+      bar: 'baz',
+      action: SomeAction
+    })
+  ]
 })
 ```
 
