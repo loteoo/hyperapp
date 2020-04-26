@@ -15,7 +15,7 @@
 Hyperscript function to create virtual DOM nodes (VNodes).  
 
 **`type`** - Name of the node, eg: `div`, `h1`, `button`, etc.   
-**`props`** - Object containing HTML or SVG attributes you want your node to have.  
+**`props`** - Object containing HTML or SVG attributes the DOM node will have.  
 **`children`** - Array of child VNodes.  
 
 A VNode is a simplified representation of a DOM element. A tree of VNodes is a virtual DOM.
@@ -28,8 +28,12 @@ h("div", { id: "box" }, [
   h("p", {}, `Current year is ${new Date().getFullYear()}.`),
 ])
 ```
-The code above returns the following virtual DOM (abridged for clarity)
+
+
+<details><summary>The code above returns the following virtual DOM (click to see)</summary>
+
 ```javascript
+// Sample virtual DOM, abridged for clarity
 {
   name: "div",
   props: {
@@ -49,29 +53,35 @@ The code above returns the following virtual DOM (abridged for clarity)
   ]
 }
 ```
-Which hyperapp renders to
+which hyperapp renders to:
 ```html
 <div id="box">
   <h1>Hello!</h1>
   <p>Current year is 2020.</p>
 </div>
 ```
+</details>
 
-#### Event attributes
+### Special attributes
 
-**`on-event`** attributes such as `onclick`, `onsubmit`, `onblur`, etc. are used for dispatching actions directly to hyperapp.
+#### on<i>event</i> attributes
+
+**<code><a href="https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Event_handlers" target="_blank">on<i>event</i></a></code>** attributes such as `onclick`, `onsubmit`, `onblur`, etc. dispatch [actions](#actions) directly to hyperapp.
+
+<details><summary>See <code>on<i>event</i></code> usage</summary>
 
 ```javascript
 <button onclick={Action}>
   Click me to dispatch an action!
 </button>
 ```
+</details>
 
+#### style attribute
 
+**`style`** attribute can be either a string of CSS or an object of styles
 
-#### Style attributes
-
-**`style`** attributes can be either a string of CSS or an object of styles
+<details><summary>See sample <code>style</code> usage</summary>
 
 ```javascript
 <div
@@ -85,12 +95,13 @@ Which hyperapp renders to
   Hello!
 </div>
 ```
+</details>
 
+#### class attribute
 
+The `class` attribute can be either a string of classes or an object of classes. For the object, the keys are the names of the classes to add and the values are booleans for toggling the classes.
 
-#### Class attributes
-
-The `class` attribute can be either a string of classes or an object of classes, where the keys are the the classes to add the values are booleans for toggling the classes.
+<details><summary>See sample <code>class</code> usage</summary>
 
 ```javascript
 const VariableUserBox = ({ user, useBorders, variant }) => (
@@ -106,6 +117,8 @@ const VariableUserBox = ({ user, useBorders, variant }) => (
   </div>
 )
 ```
+</details>
+
 
 
 
@@ -169,7 +182,7 @@ const LazyFoo = props =>
 
 Functions that describe the transitions between the states of your app.
 
-They are pure, deterministic functions that produce no side-effects and return the next state. They are dispatched in response to DOM events in your app, by an effect or by a subscription. They come in two forms:   
+They are pure, deterministic functions that produce no side-effects and return the next state. They are dispatched by either DOM events in your app, [effects](#effects) or by [subscriptions](#subscriptions). They come in two forms:   
 
 **Simple action: `state => nextState`**   
 No parameters, next state is determined entirely on the previous state.
@@ -230,8 +243,10 @@ const Foo = params => [fooFx, params]
 
 Tuples that describe bindings to external events.
 
+They allow you to dispatch [actions](#actions) based on external events, such as websockets, keystrokes or any other events outside hyperapp.
+
 **`sub`** - Subscription configurator.   
-**`params`** Data to be passed to the configurator.
+**`params`** - Data to be passed to the configurator.
 
 **Subscription configurator `(dispatch, params) => cleanupFunction`**
 
