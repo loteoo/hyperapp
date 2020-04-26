@@ -1,5 +1,5 @@
 # API reference
-#### Quick overview of hyperapp's core APIs
+### Quick overview of hyperapp's core APIs
 
 - [`h()`](#h)
 - [`app()`](#app)
@@ -18,7 +18,7 @@ Hyperscript function to create virtual DOM nodes (VNodes).
 **`props`** - Object containing HTML or SVG attributes you want your node to have.  
 **`children`** - Array of child VNodes.  
 
-A VNode is a simplified representation of a DOM element to be created. A tree of VNodes is a virtual DOM.
+A VNode is a simplified representation of a DOM element. A tree of VNodes is a virtual DOM.
 
 ```javascript
 import { h } from "hyperapp";
@@ -57,6 +57,58 @@ Which hyperapp renders to
 </div>
 ```
 
+#### Event attributes
+
+**`on-event`** attributes such as `onclick`, `onsubmit`, `onblur`, etc. are used for dispatching actions directly to hyperapp.
+
+```javascript
+<button onclick={Action}>
+  Click me to dispatch an action!
+</button>
+```
+
+
+
+#### Style attributes
+
+**`style`** attributes can be either a string of CSS or an object of styles
+
+```javascript
+<div
+  style={{
+    padding: "1rem",
+    border: "1px solid currentColor",
+    borderRadius: "0.5rem",
+    color: "#333"
+  }}
+>
+  Hello!
+</div>
+```
+
+
+
+#### Class attributes
+
+The `class` attribute can be either a string of classes or an object of classes, where the keys are the the classes to add the values are booleans for toggling the classes.
+
+```javascript
+const VariableUserBox = ({ user, useBorders, variant }) => (
+  <div
+    class={{
+      box: true,
+      disabled: user.role !== 'admin',
+      ["has-borders"]: useBorders,
+      [variant]: !!variant
+    }}
+  >
+    {user.name}
+  </div>
+)
+```
+
+
+
 
 ## app()
 
@@ -64,7 +116,7 @@ Which hyperapp renders to
 
 Initialize an hyperapp app using the given options.
 
-**`init`** - [Action](#actions) to initialize the app's state. Can be the initial state itself or a function that returns it. Can also kick off [Effects](#effects).   
+**`init`** - [Action](#actions) to initialize the app's state. Can be the initial state itself or a function that returns it. Can also kick off [Effects.](#effects)   
 **`view`** - Function that returns a virtual DOM for a given state. It maps your state to a UI that hyperapp renders.   
 **`subscriptions`** - Array of [subscriptions](#subscriptions) to subscribe to.   
 **`node`** - DOM element to render the virtual DOM on. Also known as the application container or the mount node.   
@@ -115,9 +167,9 @@ const LazyFoo = props =>
 
 ## Actions
 
-Actions describe the transitions between the states of your app.
+Functions that describe the transitions between the states of your app.
 
-You write them as pure, deterministic functions that produce no side-effects. They are dispatched in response to DOM events in your app, by an effect or by a subscription. They come in two forms:   
+They are pure, deterministic functions that produce no side-effects and return the next state. They are dispatched in response to DOM events in your app, by an effect or by a subscription. They come in two forms:   
 
 **Simple action: `state => nextState`**   
 No parameters, next state is determined entirely on the previous state.
@@ -211,10 +263,3 @@ app({
   ]
 })
 ```
-
-
-
-
-#### TODO
-- Talk about the class attribute when used as an object
-- Talk about the style attribute when used as an object
