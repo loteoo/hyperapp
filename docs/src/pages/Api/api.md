@@ -148,12 +148,10 @@ const IncrementBy = (state, by) => state + by
 
 Tuples that represent a side-effect that needs to run. Effects do not execute code, they represent code that needs to be executed.
 
-The first value `fx` is an effect runner.   
-The second value `params` is data passed to the effect runner.
+**`fx`** - Effect runner.   
+**`params`** is data passed to the effect runner.
 
-**Effect runner `fx`**
-
-`(dispatch, params) => void`.
+**Effect runner `(dispatch, params) => void`**
 
 Executes your side effect outside of hyperapp and can dispatch an Action when complete.
 
@@ -164,11 +162,11 @@ const fooFx = (dispatch, params) => {
   dispatch(SomeAction) // Optionnally dispatch an action
 }
 
-// Helper to easily create the effect tuple
+// Helper to easily create the effect tuple for the foo effect
 const foo = params => [fooFx, params]
 
 // Usage in the view
-<button onclick={foo('bar')}>do foo</button>
+<button onclick={[state, foo('bar')]}>do foo</button>
 ```
 
 
@@ -176,7 +174,7 @@ const foo = params => [fooFx, params]
 
 ## Subscriptions
 
-Bonjour
+
 
 ```javascript
 const fx = (a) => (b) => [a, b]
