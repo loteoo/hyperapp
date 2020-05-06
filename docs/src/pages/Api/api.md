@@ -1,38 +1,56 @@
 # API reference
 ### Quick overview of hyperapp's core APIs
 
+Below is a consice recap of hyperapp's core APIs, jam-packed with information about the framework.
+
+It's geared towards developers who already understand what hyperapp is and want to see documentation for it's concepts.
+
 - [`h()`](#h)
+  - [on<i>event</i>](#onevent-props)
+  - [key](#key-prop)
+  - [style](#style-prop)
+  - [class](#class-prop)
 - [`app()`](#app)
+  - [Middlewares](#middlewares)
 - [`Lazy()`](#lazy)
 - [Actions](#actions)
+  - [Simple](#simple-action-state--nextstate)
+  - [Complex](#complex-action-state-params--nextstate)
+  - [With side-effects](#action-with-side-effects-state--nextstate-effects)
 - [Effects](#effects)
 - [Subscriptions](#subscriptions)
 
 ## h()
 
-`h(type, props, ...children)`
+```javascript
+h(type, props, ...children)
+```
 
 Hyperscript function to create virtual DOM nodes (VNodes).  
 
-**type** - Name of the node, eg: div, h1, button, etc.   
-**props** - Object containing HTML or SVG attributes the DOM node will have.  
-**children** - Array of child VNodes.  
+- **type** - Name of the node, eg: div, h1, button, etc.   
+- **props** - Object containing HTML or SVG attributes the DOM node will have and [special props](#special-props).  
+- **children** - Array of child VNodes.  
 
 ```javascript
 import { h } from "hyperapp";
 
-h("div", { id: "box" }, [
-  h("h1", {}, "Hello!"),
-  h("p", {}, `Current year is ${new Date().getFullYear()}.`),
-])
+const Box = ({ showGreeting = false }) =>
+  h("div", { id: "box" }, [
+    h("h1", {}, "Hello!"),
+    showGreeting && h("p", {}, "Nice to see you."),
+  ])
 ```
 
 
-<details><summary>The code above returns the following virtual DOM (click to see)</summary>
+<details><summary>The function above returns the following virtual DOM (click to see)</summary>
 
 ```javascript
 // A VNode is a simplified representation of a DOM element. A tree of VNodes is a virtual DOM.
-// This is what the virtual DOM for the code above looks like, abridged for clarity.
+// This is what the virtual DOM returned by the function above looks like, abridged for clarity.
+
+// Box({ showGreeting: true }) or <Box showGreeting={true} />
+
 {
   name: "div",
   props: {
@@ -47,7 +65,7 @@ h("div", { id: "box" }, [
     {
       name: "p",
       props: {},
-      children: ["Current year is 2020."]
+      children: ["Nice to see you."]
     },
   ]
 }
@@ -56,31 +74,42 @@ which hyperapp renders to:
 ```html
 <div id="box">
   <h1>Hello!</h1>
-  <p>Current year is 2020.</p>
+  <p>Nice to see you.</p>
 </div>
 ```
 </details>
 
-### Special attributes
+### Special props
 
-#### on<i>event</i> attributes
+#### On<i>event</i> props
 
-**<a href="https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Event_handlers" target="_blank">on<i>event</i></a>** attributes such as onclick, onsubmit, onblur, etc. dispatch [actions](#actions) directly to hyperapp.
+<code><a href="https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Event_handlers" target="_blank">on<i>event</i></a></code> props such as onclick, onsubmit, onblur, etc. dispatch [actions](#actions) directly to hyperapp. In the Action tuple, the second element can be a function that processes the events before passing the params to the action.
 
-<details><summary>See sample <strong>on<i>event</i></strong> usage</summary>
 
 ```javascript
-<button onclick={Action}>
-  Click me to dispatch an action!
-</button>
+<input name="amount" type="number" onchange={[SetAmount, ev => parseInt(ev.target.value)]} />
 ```
-</details>
 
-#### style attribute
+#### Key prop
 
-**style** attribute can be either a string of CSS or an object of styles
+The `key` is a unique string per VNode that help hyperapp track if VNodes are changed, added or removed in situations where it can't, such as in arrays.
 
-<details><summary>See sample <strong>style</strong> attribute usage</summary>
+
+```javascript
+const Items = ({ items }) => (
+  <ul>
+    {items.map((item) =>
+      <li key={item.id}>
+        {item.text}
+      </li>
+    )}
+  </ul>
+)
+```
+
+#### Style prop
+
+The `style` prop can be either a string of CSS or an object of styles
 
 ```javascript
 <div
@@ -94,16 +123,14 @@ which hyperapp renders to:
   Hello!
 </div>
 ```
-</details>
 
-#### class attribute
+#### Class prop
 
-The **class** attribute can be either a string of classes or an object of classes. For the object, the keys are the names of the classes to add and the values are booleans for toggling the classes.
+The `class` prop can be either a string of classes or an object of classes. For the object, the keys are the names of the classes to add and the values are booleans for toggling the classes.
 
-<details><summary>See sample <strong>class</strong> attribute usage</summary>
 
 ```javascript
-const VariableUserBox = ({ user, useBorders, variant }) => (
+const VariableProfileBox = ({ user, useBorders, variant }) => (
   <div
     class={{
       box: true,
@@ -116,7 +143,6 @@ const VariableUserBox = ({ user, useBorders, variant }) => (
   </div>
 )
 ```
-</details>
 
 
 
@@ -124,26 +150,23 @@ const VariableUserBox = ({ user, useBorders, variant }) => (
 
 ## app()
 
-`app({ init, view, subscriptions, node })`
+```javascript
+app({ init, view, subscriptions, node, middleware })
+```
 
 Initialize an hyperapp app using the given options.
 
-**init** - [Action](#actions) to initialize the app's state. Can be the initial state itself or a function that returns it. Can also kick off [Effects.](#effects)   
-**view** - Function that returns a virtual DOM for a given state. It maps your state to a UI that hyperapp renders.   
-**subscriptions** - Array of [subscriptions](#subscriptions) to subscribe to.   
-**node** - DOM element to render the virtual DOM on. Also known as the application container or the mount node.   
+- **init** - [Action](#actions) to initialize the app's state. Can be the initial state itself or a function that returns it. Can also kick off [Effects.](#effects)   
+- **view** - Function that returns a virtual DOM for a given state. It maps your state to a UI that hyperapp renders.   
+- **subscriptions** - Array of [subscriptions](#subscriptions) to subscribe to.   
+- **node** - DOM element to render the virtual DOM on. Also known as the application container or the mount node.   
+- **middleware** - [Middeware](#middlewares) higher order function.
 
 ```javascript
 import { app } from "hyperapp";
 // ...
 app({
-  
-  // Possible usages for init:
-  init: state,
-  init: Action,
-  init: [state, Effect],
-  init: [Action, Effect],
-
+  init: InitialAction,
   view: View,
   node: document.getElementById("app"),
   subscriptions: (state) => [
@@ -152,16 +175,30 @@ app({
 });
 ```
 
+#### Middlewares
+```javascript
+dispatch => newDispatch
+```
+
+Middlewares are higher order functions that change the `dispatch` that hyperapp will use. They are used for wrapping all actions that the app will dispatch with extended behavior.
+
+```javascript
+const middleware = dispatch => /* newDispatch */
+
+app(props, middleware)
+```
 
 
 ## Lazy()
 
-`Lazy({ render, ...props })`
+```javascript
+Lazy({ render, ...props })
+```
 
 Higher order function to memoize view functions.
 
-**render** - Function that returns a virtual DOM. *Must be a named function.*   
-**...props** - Props to pass down to the view function. The underlying view is only re-computed when those change.   
+- **render** - Function that returns a virtual DOM. *Must be a named function.*   
+- **...props** - Props to pass down to the view function. The underlying view is only re-computed when those change.   
 
 ```javascript
 import { Lazy } from "hyperapp"
@@ -179,13 +216,15 @@ const LazyFoo = props =>
 
 ## Actions
 
-`(state, params?) => nextState`
+```javascript
+(state, params?) => nextState
+```
 
 Functions that describe the transitions between the states of your app.
 
-They are pure, deterministic functions that produce no side-effects and return the next state. They are dispatched by either DOM events in your app, [effects](#effects) or by [subscriptions](#subscriptions). They come in two forms:   
+They are pure, deterministic functions that produce no side-effects and return the next state. They are dispatched by either DOM events in your app, [effects](#effects) or by [subscriptions](#subscriptions). They come in many forms:   
 
-**Simple action: `state => nextState`**   
+#### Simple action: `state => nextState`
 No parameters, next state is determined entirely on the previous state.
 
 ```javascript
@@ -196,7 +235,7 @@ const Increment = (state) => state + 1
 <button onclick={Increment}>+</button>
 ```
 
-**Complex action: `(state, params) => nextState`**   
+#### Complex action: `(state, params) => nextState`
 Action with parameters along with the previous state.
 ```javascript
 // Complex action
@@ -206,18 +245,38 @@ const IncrementBy = (state, by) => state + by
 <button onclick={[IncrementBy, 5]}>+5</button>
 ```
 
+#### Action with side-effects: `(state) => [nextState, ...effects]`
+Action that returns [effects](#effects) to run along with the next state.
+```javascript
+import { Http } from './fx'
+
+// Action with HTTP side-effect
+const GetPizzas = (state) => [
+  state,
+  Http({
+    url: '/pizzas',
+    action: SetPizzas
+  })
+]
+
+// Usage in the view
+<button onclick={GetPizzas}>Get pizzas</button>
+```
+Actions with side-effects can also take in params, just like a complex action. If so, it will be dispatched in the same way using an "Action tuple".
 
 
 ## Effects
 
-`[fx, params]`
+```javascript
+[fx, params]
+```
 
 Tuples that describe a side-effect that needs to run. Effects do not execute code, they represent code that needs to be executed.
 
-**fx** - Effect runner.   
-**params** Data to be passed to the effect runner.
+- **fx** - Effect runner.   
+- **params** Data to be passed to the effect runner.
 
-**Effect runner `(dispatch, params) => void`**
+#### Effect runner `(dispatch, params) => void`
 
 Executes your side effect outside of hyperapp and can dispatch an [action](#actions) when it completes.
 
@@ -233,18 +292,18 @@ const httpFx = (dispatch, params) => {
 // Helper to easily create the effect tuple for the Http effect
 const Http = params => [httpFx, params]
 
-// Usage in the view
-<button
-  onclick={[
-    state,
-    Http({
-      url: '/pizzas',
-      action: SetPizzas
-    })
-  ]}
->
-  get pizzas
-</button>
+// Usage of the effect in an action
+const GetPizzas = (state) => [
+  state,
+  Http({
+    url: '/pizzas',
+    action: SetPizzas
+  })
+  // Could add more effects here...
+]
+
+// Usage of the "action with side-effect" in the view
+<button onclick={GetPizzas}>Get pizzas</button>
 ```
 
 
@@ -252,16 +311,18 @@ const Http = params => [httpFx, params]
 
 ## Subscriptions
 
-`[sub, params]`
+```javascript
+[sub, params]
+```
 
 Tuples that describe bindings to external events.
 
 They allow you to dispatch [actions](#actions) based on external events, such as websockets, keystrokes or any other events outside hyperapp.
 
-**sub** - Subscription configurator.   
-**params** - Data to be passed to the configurator.
+- **sub** - Subscription configurator.   
+- **params** - Data to be passed to the configurator.
 
-**Subscription configurator `(dispatch, params) => cleanupFunction`**
+#### Subscription configurator `(dispatch, params) => cleanupFunction`
 
 Binds **dispatch** to an external event. Returns a cleanup function that removes the binding.
 
@@ -271,8 +332,8 @@ const keySub = (dispatch, params) => {
 
   // Hook up dispatch to external events
   const handler = (ev) => {
-    if (params.codes.includes(ev.code)) {
-      dispatch([params.action, ev.code])
+    if (params.keys.includes(ev.key)) {
+      dispatch([params.action, ev.key])
     }
   }
   window.addEventListener('keydown', handler)
@@ -289,7 +350,7 @@ app({
   // ...
   subscriptions: state => [
     Key({
-      codes: ['w', 'a', 's', 'd'],
+      keys: ['w', 'a', 's', 'd'],
       action: ChangeDirection
     })
   ]
