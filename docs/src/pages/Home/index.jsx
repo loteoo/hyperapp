@@ -35,7 +35,7 @@ export default (state) => (
     </nav>
 
     <header class="home-header">
-      <a class="arrow-link" href="https://github.com/jorgebucaran/hyperapp" target="_blank" rel="noopener noreferrer">2.0.3</a>
+      <a class="arrow-link" href="https://github.com/jorgebucaran/hyperapp" target="_blank" rel="noopener noreferrer">2.0.4</a>
       <marquee>this site is a wip, stay in touch!</marquee>
     </header>
 

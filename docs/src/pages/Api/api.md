@@ -80,7 +80,7 @@ which hyperapp renders to:
 
 **style** attribute can be either a string of CSS or an object of styles
 
-<details><summary>See sample **style** attribute usage</summary>
+<details><summary>See sample <strong>style</strong> attribute usage</summary>
 
 ```javascript
 <div
@@ -100,7 +100,7 @@ which hyperapp renders to:
 
 The **class** attribute can be either a string of classes or an object of classes. For the object, the keys are the names of the classes to add and the values are booleans for toggling the classes.
 
-<details><summary>See sample **class** attribute usage</summary>
+<details><summary>See sample <strong>class</strong> attribute usage</summary>
 
 ```javascript
 const VariableUserBox = ({ user, useBorders, variant }) => (
@@ -165,14 +165,14 @@ Higher order function to memoize view functions.
 
 ```javascript
 import { Lazy } from "hyperapp"
-import { Foo } from "./components/foo"
+import { Pizzas } from "./components/Pizzas"
 
 const LazyFoo = props =>
   Lazy({
-    render: Foo,
+    render: Pizzas,
     key: "unique-key", // Make sure the lazy component itself doesn't re-render
-    foo: props.foo,
-    bar: props.bar
+    pizzas: props.pizzas,
+    expanded: true
   })
 ```
 
@@ -223,16 +223,28 @@ Executes your side effect outside of hyperapp and can dispatch an [action](#acti
 
 ```javascript
 // Effect runner
-const fooFx = (dispatch, params) => {
-  console.log(params) // Do side effects
-  dispatch(SomeAction) // Optionnally dispatch an action
+const httpFx = (dispatch, params) => {
+  // Do side effects
+  fetch(params.url, params.options)
+    .then(res => res.json())
+    .then(data => dispatch(data)) // Optionnally dispatch an action
 }
 
-// Helper to easily create the effect tuple for the Foo effect
-const Foo = params => [fooFx, params]
+// Helper to easily create the effect tuple for the Http effect
+const Http = params => [httpFx, params]
 
 // Usage in the view
-<button onclick={[state, Foo('bar')]}>do foo</button>
+<button
+  onclick={[
+    state,
+    Http({
+      url: '/pizzas',
+      action: SetPizzas
+    })
+  ]}
+>
+  get pizzas
+</button>
 ```
 
 
@@ -255,26 +267,30 @@ Binds **dispatch** to an external event. Returns a cleanup function that removes
 
 ```javascript
 // Subscription configurator
-const fooSub = (dispatch, params) => {
+const keySub = (dispatch, params) => {
 
-  // Hook up dispatch to an external event
-  const handler = (eventData) => dispatch([params.action, eventData])
-  window.addEventListener('someEvent', handler)
+  // Hook up dispatch to external events
+  const handler = (ev) => {
+    if (params.codes.includes(ev.code)) {
+      dispatch([params.action, ev.code])
+    }
+  }
+  window.addEventListener('keydown', handler)
   
   // Cleanup function
-  return () => window.removeEventListener('someEvent', handler)
+  return () => window.removeEventListener('keydown', handler)
 }
 
-// Helper to easily create the subscription tuple for the Foo subscription
-const Foo = params => [fooSub, params]
+// Helper to easily create the subscription tuple
+const Key = params => [keySub, params]
 
 // Usage in app
 app({
   // ...
   subscriptions: state => [
-    Foo({
-      bar: 'baz',
-      action: SomeAction
+    Key({
+      codes: ['w', 'a', 's', 'd'],
+      action: ChangeDirection
     })
   ]
 })
