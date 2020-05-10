@@ -13,12 +13,12 @@ It's geared towards developers who already understand what hyperapp is and want 
 - [`app()`](#app)
   - [Middlewares](#middlewares)
 - [`Lazy()`](#lazy)
-- [Actions](#actions)
+- [actions](#actions)
   - [Simple](#simple-action-state--nextstate)
   - [Complex](#complex-action-state-params--nextstate)
   - [With side-effects](#action-with-side-effects-state--nextstate-effects)
-- [Effects](#effects)
-- [Subscriptions](#subscriptions)
+- [effects](#effects)
+- [subscriptions](#subscriptions)
 
 ## h()
 
@@ -83,7 +83,7 @@ which hyperapp renders to:
 
 #### On<i>event</i> props
 
-<code><a href="https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Event_handlers" target="_blank">on<i>event</i></a></code> props such as onclick, onsubmit, onblur, etc. dispatch [actions](#actions) directly to hyperapp. In the Action tuple, the second element can be a function that processes the events before passing the params to the action.
+<code><a href="https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Event_handlers" target="_blank">on<i>event</i></a></code> props such as onclick, onsubmit, onblur, etc. dispatch [actions](#actions) directly to hyperapp. In the action tuple, the second element can be a function that processes the events before passing the params to the action.
 
 
 ```javascript
@@ -156,7 +156,7 @@ app({ init, view, subscriptions, node, middleware })
 
 Initialize an hyperapp app using the given options.
 
-- **init** - [Action](#actions) to initialize the app's state. Can be the initial state itself or a function that returns it. Can also kick off [Effects.](#effects)   
+- **init** - [Action](#actions) to initialize the app's state. Can be the initial state itself or a function that returns it. Can also kick off [effects.](#effects)   
 - **view** - Function that returns a virtual DOM for a given state. It maps your state to a UI that hyperapp renders.   
 - **subscriptions** - Array of [subscriptions](#subscriptions) to subscribe to.   
 - **node** - DOM element to render the virtual DOM on. Also known as the application container or the mount node.   
@@ -241,7 +241,7 @@ Action with parameters along with the previous state.
 // Complex action
 const IncrementBy = (state, by) => state + by
 
-// Usage in the view, using an "Action tuple"
+// Usage in the view, using an "action tuple"
 <button onclick={[IncrementBy, 5]}>+5</button>
 ```
 
@@ -262,10 +262,10 @@ const GetPizzas = (state) => [
 // Usage in the view
 <button onclick={GetPizzas}>Get pizzas</button>
 ```
-Actions with side-effects can also take in params, just like a complex action. If so, it will be dispatched in the same way using an "Action tuple".
+Actions with side-effects can also take in params, just like a complex action. If so, it will be dispatched in the same way using an "action tuple".
 
 
-## Effects
+## effects
 
 ```javascript
 [fx, params]
@@ -309,7 +309,7 @@ const GetPizzas = (state) => [
 
 
 
-## Subscriptions
+## subscriptions
 
 ```javascript
 [sub, params]
