@@ -1,9 +1,9 @@
 # API reference
-### Quick overview of hyperapp's core APIs
+### Overview of hyperapp's core APIs
 
-Below is a consice recap of hyperapp's core APIs, jam-packed with information about the framework.
+Below is a consice recap of hyperapp's core APIs, packed with information about the framework.
 
-It's geared towards developers who already understand what hyperapp is and want to see documentation for it's concepts.
+It's geared towards developers who already have some level of understanding on what hyperapp is and want to see documentation for it's concepts.
 
 - [`h()`](#h)
   - [on<i>event</i>](#onevent-props)
@@ -11,7 +11,11 @@ It's geared towards developers who already understand what hyperapp is and want 
   - [style](#style-prop)
   - [class](#class-prop)
 - [`app()`](#app)
-  - [Middlewares](#middlewares)
+  - [init](#init-prop)
+  - [view](#view-prop)
+  - [subscriptions](#subscriptions-prop)
+  - [node](#node-prop)
+  - [middleware](#middleware-prop)
 - [`Lazy()`](#lazy)
 - [actions](#actions)
   - [Simple](#simple-action-state--nextstate)
@@ -26,7 +30,10 @@ It's geared towards developers who already understand what hyperapp is and want 
 h(type, props, ...children)
 ```
 
-Hyperscript function to create virtual DOM nodes (VNodes).  
+Hyperscript function to create virtual DOM nodes (VNodes), which are used for [rendering](#rendering).  
+
+A VNode is a simplified representation of an HTML element. It represents an element you want to see on the screen in your app. Unlike real DOM nodes, VNodes are cheap to create and easy for the CPU to work with.
+
 
 - **type** - Name of the node, eg: div, h1, button, etc.   
 - **props** - Object containing HTML or SVG attributes the DOM node will have and [special props](#special-props).  
@@ -42,15 +49,13 @@ const Box = ({ showGreeting = false }) =>
   ])
 ```
 
+A tree of VNodes is achieved using the `children` parameter on the `h` function. This tree is called a virtual DOM.
 
-<details><summary>The function above returns the following virtual DOM (click to see)</summary>
+This is what the virtual DOM returned by the `Box` function above looks like, abridged for clarity.
 
 ```javascript
-// A VNode is a simplified representation of a DOM element. A tree of VNodes is a virtual DOM.
-// This is what the virtual DOM returned by the function above looks like, abridged for clarity.
-
 // Box({ showGreeting: true }) or <Box showGreeting={true} />
-
+// =>
 {
   name: "div",
   props: {
@@ -77,7 +82,20 @@ which hyperapp renders to:
   <p>Nice to see you.</p>
 </div>
 ```
-</details>
+
+In hyperapp, because you are using javascript to represent the DOM of your application, you can use it's full power to dynamically render elements to the screen. Here's an example for doing conditionnal rendering in hyperapp:
+
+```javascript
+const AccordionComponent = ({ title, description, isOpened }) => (
+  <div class="accordion">
+    <h4>{title}</h4>
+    <button>{isOpened ? 'Expand' : 'Collapse'}</button>
+    {isOpened && (
+      <p>{description}</p>
+    )}
+  </div>
+)
+```
 
 ### Special props
 
@@ -151,16 +169,15 @@ const VariableProfileBox = ({ user, useBorders, variant }) => (
 ## app()
 
 ```javascript
-app({ init, view, subscriptions, node, middleware })
+app({ init, view, node, subscriptions, middleware })
 ```
 
-Initialize an hyperapp app using the given options.
+The app function is used to initialize and mount an hyperapp app.
 
-- **init** - [Action](#actions) to initialize the app's state. Can be the initial state itself or a function that returns it. Can also kick off [effects.](#effects)   
-- **view** - Function that returns a virtual DOM for a given state. It maps your state to a UI that hyperapp renders.   
-- **subscriptions** - Array of [subscriptions](#subscriptions) to subscribe to.   
-- **node** - DOM element to render the virtual DOM on. Also known as the application container or the mount node.   
-- **middleware** - [Middeware](#middlewares) higher order function.
+There are 5 properties you can pass in to configure your app, all of which describe how your app will behave. 
+
+The first 3 options, init, view and node, are required. The last two, subscriptions and middleware, will depend on your use case.
+
 
 ```javascript
 import { app } from "hyperapp";
@@ -171,22 +188,89 @@ app({
   node: document.getElementById("app"),
   subscriptions: (state) => [
     SomeSubscription
-  ]
+  ],
+  middleware: dispatch => /* newDispatch */
 });
 ```
 
-#### Middlewares
+#### init prop
+
+[Action](#actions) to initialize the app.   
+
+This action is used to set the app's initial state and kickoff side-effects. Using the various types of [actions](#actions) that exists in hyperapp, you can do things like fetching initial data for your app or simply importing data and setting that as the initial state.
+
+Simple `init` usage with pre-defined state.
+```javascript
+const initialState = {
+  count: 0
+}
+app({
+  init: initialState,
+  // ...
+});
+```
+
+Complex `init` usage with a side-effect that fetches data.
+```javascript
+const initialState = {
+  loaded: false
+  items: []
+}
+const SetTodoItems = (state, items) => ({
+  ...state,
+  loaded: true,
+  items
+})
+const InitialAction = [
+  initialState,
+  Http({
+    url: '/todo-items',
+    action: SetTodoItems
+  })
+]
+app({
+  init: InitialAction,
+  // ...
+});
+```
+
+
+
+
+#### view prop
+```javascript
+state => virtualDOM
+```
+View function that returns a virtual DOM for a given state.
+
+It maps your state to a UI that hyperapp uses for rendering the app.  
+
+Every time the state of you application changes, this function will be called again to render the UI based on the new state, using the logic you've defined inside of it.
+
+
+#### node prop
+
+DOM element to render the virtual DOM on. Also known as the application container or the mount node. 
+
+Hyperapp supports hydration out of the box. This means that, if the mount node you specify is already populated with DOM elements, hyperapp will recycle and use these existing elements instead of throwing them away and create them again. You can use this for doing SSR or pre-rendering of your applications, which will give you SEO and performance benifits.
+
+
+#### subscriptions prop
+```javascript
+state => subscriptions[]
+```
+Function that returns an array of [subscriptions](#subscriptions) for a given state.
+
+In a similar fashion to how the view function is used to dynamically add and remove DOM elements based on the state, this subscriptions function is used for dynamically adding and removing [subscriptions](#subscriptions) to the app.
+
+
+#### middleware prop
 ```javascript
 dispatch => newDispatch
 ```
 
-Middlewares are higher order functions that change the `dispatch` that hyperapp will use. They are used for wrapping all actions that the app will dispatch with extended behavior.
+Higher order functions that changes the `dispatch` that hyperapp will use. They are used for wrapping all actions that the app will dispatch with extended behavior.
 
-```javascript
-const middleware = dispatch => /* newDispatch */
-
-app(props, middleware)
-```
 
 
 ## Lazy()
@@ -194,11 +278,14 @@ app(props, middleware)
 ```javascript
 Lazy({ render, ...props })
 ```
+Lazy is higher order function (wrapper function) to cache your view functions based on props you pass into them.
 
-Higher order function to memoize view functions.
+It's a helps you achieve a performance optimization technique commonly refered to as memoization.
+
+Immutability in hyperapp guarantees that if two things are referentially equal, they must be identical. This makes it safe for hyperapp to only re-compute your Lazy components when values passed through their props change.
 
 - **render** - Function that returns a virtual DOM. *Must be a named function.*   
-- **...props** - Props to pass down to the view function. The underlying view is only re-computed when those change.   
+- **...props** - Props to pass down to the view function. The underlying view is re-computed when those change.   
 
 ```javascript
 import { Lazy } from "hyperapp"
@@ -214,7 +301,7 @@ const LazyFoo = props =>
 ```
 
 
-## Actions
+## actions
 
 ```javascript
 (state, params?) => nextState
@@ -222,7 +309,9 @@ const LazyFoo = props =>
 
 Functions that describe the transitions between the states of your app.
 
-They are pure, deterministic functions that produce no side-effects and return the next state. They are dispatched by either DOM events in your app, [effects](#effects) or by [subscriptions](#subscriptions). They come in many forms:   
+They are the only way to change the state of your Hyperapp app.
+
+Actions are pure, deterministic functions that produce no side-effects and return the next state. They are dispatched by either DOM events in your app, [effects](#effects) or by [subscriptions](#subscriptions). They come in multiple forms:   
 
 #### Simple action: `state => nextState`
 No parameters, next state is determined entirely on the previous state.
@@ -270,15 +359,17 @@ Actions with side-effects can also take in params, just like a complex action. I
 ```javascript
 [fx, params]
 ```
+Tuples that describe a side-effect that needs to run.
 
-Tuples that describe a side-effect that needs to run. Effects do not execute code, they represent code that needs to be executed.
+Effects are only descriptions of work that needs to be executed, they do not do any side-effects themselves. This allows your application to remain pure while also interacting with the outside world. 
 
 - **fx** - Effect runner.   
 - **params** Data to be passed to the effect runner.
 
 #### Effect runner `(dispatch, params) => void`
 
-Executes your side effect outside of hyperapp and can dispatch an [action](#actions) when it completes.
+Encapsulates the implementation of side effects to run outside of hyperapp and can dispatch an [action](#actions) when it completes.
+
 
 ```javascript
 // Effect runner
@@ -315,9 +406,12 @@ const GetPizzas = (state) => [
 [sub, params]
 ```
 
-Tuples that describe bindings to external events.
+Tuples that describe the bindings between your app and external events.
 
-They allow you to dispatch [actions](#actions) based on external events, such as websockets, keystrokes or any other events outside hyperapp.
+They allow you to dispatch [actions](#actions) based on external events, such as websockets, keystrokes or any other events outside hyperapp using a declarative API instead of an event-driven one.
+
+They are used for both adding and removing connections to events outside hyperapp.
+
 
 - **sub** - Subscription configurator.   
 - **params** - Data to be passed to the configurator.
