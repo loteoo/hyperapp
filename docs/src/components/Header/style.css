@@ -3,11 +3,8 @@
   display: flex;
   justify-content: space-between;
   padding: 1rem;
-  position: sticky;
-  top: 0;
-  left: 0;
-  right: 0;
   z-index: 10;
+  background-color: #f6f6f8;
 }
 
 
@@ -53,9 +50,6 @@
 
 
 .menu {
-  position: fixed;
-  top: 0;
-  left: 0;
   background-color: white;
   width: 100%;
   z-index: 10;
@@ -66,15 +60,14 @@
 .menu.opened {
   display: block;
 }
-.menu a,
-.menu .search-field {
+.menu a {
   display: block;
-  font-size: 3.375rem;
-  font-weight: 300;
+  font-size: 1rem;
+  font-weight: 400;
   line-height: 1.2;
   color: var(--text-grey);
   text-decoration: none;
-  font-family: 'IBM Plex Sans', sans-serif;
+  font-family: 'Fira Code', monospace;
 }
 .menu a:hover {
   color: #546067;
@@ -83,44 +76,28 @@
   color: var(--dark-blue);
 }
 
-.search-field {
-  max-width: 100%;
-  width: 100%;
-  padding: 0;
-  color: #3d434e !important;
+.menu > ul > li > a {
+  font-size: 1.5rem;
+  margin: 1rem 0 0.5rem 0;
 }
 
-.search-field:focus {
-  outline: none;
+.menu > ul > li > ul > li > a {
+  margin: 0.5rem 0 0.25rem 0;
+  font-weight: 500;
 }
-.search-field:valid  {
-  color: var(--dark-blue);
+.menu > ul > li > ul > li > ul {
+  padding-left: 1rem;
 }
 
 
-
-@media (max-width: 991px) {
-  .search-form:focus-within {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 1.25rem;
-    background-color: rgba(255, 255, 255, 0.9);
-    display: flex;
-    align-items: center;
-    z-index: 20;
-  }
-}
 
 
 @media (min-width: 640px) {
   .site-header {
-    padding: 1rem 1.25rem 1rem 1.25rem;
+    padding: 1rem;
   }
   .menu {
-    padding: 6rem 1.25rem 2rem 1.25rem;
+    padding: 6rem 1rem 2rem 1rem;
   }
 }
 
@@ -130,10 +107,15 @@
 @media (min-width: 992px) {
   .site-header {
     position: fixed;
-    padding: 1.25rem;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    padding: 1.5rem 2rem 1.5rem 1.5rem;
     flex-direction: column;
     justify-content: flex-start;
-    max-width: var(--menu-width);
+    max-width: 20rem;
+    overflow: auto;
+
   }
   .menu-toggler {
     display: none;

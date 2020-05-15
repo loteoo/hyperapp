@@ -16,16 +16,6 @@ const highLightFx = () => {
 
 export const HighLight = () => [highLightFx]
 
-const focusFx = (_dispatch, { selector }) => {
-  setTimeout(() => {
-    const el = document.querySelector(selector)
-    if (el) {
-      el.focus()
-    }
-  }, 50)
-}
-
-export const Focus = ({ selector }) => [focusFx, { selector }]
 
 const selectFx = (_dispatch, { selector }) => {
   const el = document.querySelector(selector)

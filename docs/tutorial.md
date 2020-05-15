@@ -1,3 +1,5 @@
+# Tutorial
+
 Welcome! If you're new to Hyperapp, you've found the perfect place to start learning.
 
 Table of contents

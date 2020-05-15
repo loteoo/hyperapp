@@ -1,12 +1,16 @@
 # [Hyperapp](https://hyperapp.dev) [![npm](https://img.shields.io/npm/v/hyperapp.svg?label=&color=0080FF)](https://github.com/jorgebucaran/hyperapp/releases/latest)
 
-> The tiny framework for building web interfaces.
+## The tiny framework for building web interfaces.
 
-- **Do more with less**—We have minimized the concepts you need to learn to be productive. Views, actions, effects, and subscriptions are all pretty easy to get to grips with and work together seamlessly.
-- **Write what, not how**—With a declarative syntax that's easy to read and natural to write, Hyperapp is your tool of choice to develop purely functional, feature-rich, browser-based applications.
-- **Hypercharged**—Hyperapp is a modern VDOM engine, state management solution, and application design pattern all-in-one. Once you learn to use it, there'll be no end to what you can do.
+### Do more with less
+We have minimized the concepts you need to learn to be productive. Views, actions, effects, and subscriptions are all pretty easy to get to grips with and work together seamlessly.
 
-To learn more, go to <https://hyperapp.dev> for documentation, guides, and examples.
+### Write what, not how
+With a declarative syntax that's easy to read and natural to write, Hyperapp is your tool of choice to develop purely functional, feature-rich, browser-based applications.
+
+### Hypercharged
+Hyperapp is a modern VDOM engine, state management solution, and application design pattern all-in-one. Once you learn to use it, there'll be no end to what you can do.
+
 
 ## Quickstart
 

@@ -1,4 +1,4 @@
-# API reference
+# Reference
 ### Overview of hyperapp's core APIs
 
 Below is a consice recap of hyperapp's core APIs, packed with information about the framework.
@@ -6,7 +6,7 @@ Below is a consice recap of hyperapp's core APIs, packed with information about 
 It's geared towards developers who already have some level of understanding on what hyperapp is and want to see documentation for it's concepts.
 
 - [`h()`](#h)
-  - [on<i>event</i>](#onevent-props)
+  - [on<i>event</i>](#onieventi-props)
   - [key](#key-prop)
   - [style](#style-prop)
   - [class](#class-prop)

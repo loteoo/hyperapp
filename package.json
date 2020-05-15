@@ -21,7 +21,7 @@
     "virtual dom",
     "vdom"
   ],
-  "scripts": { 
+  "scripts": {
     "test": "nyc -i esm -r lcov testmatrix test/*.test.js && nyc report",
     "build": "export pkg=$npm_package_name; npm run bundle && npm run minify",
     "bundle": "rollup -i $npm_package_module -o dist/$pkg.js --no-esModule -mf iife -n $pkg",
@@ -32,10 +32,11 @@
   },
   "devDependencies": {
     "esm": "^3.2.25",
-    "nyc": "^14.1.1",
-    "testmatrix": "^0.1.2",
     "jsdom": "15.1.1",
+    "marked": "^1.0.0",
+    "nyc": "^14.1.1",
     "rollup": "*",
-    "terser": "^4.3.8"
+    "terser": "^4.3.8",
+    "testmatrix": "^0.1.2"
   }
 }

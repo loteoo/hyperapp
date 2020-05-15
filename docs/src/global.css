@@ -1,11 +1,205 @@
-@import './styleguide/hyperapp.css';
 
-body {
-  --menu-width: 19rem;
+/* Start with best-practices css defaults */
+@import 'sanitize.css';
+@import 'sanitize.css/typography.css';
+@import 'sanitize.css/forms.css';
+
+/* Import font configurations */
+@import './assets/fonts/IBMPlexSans/ibm_plex_sans.css';
+@import './assets/fonts/FiraCode/fira_code.css';
+
+/* === Global variables === */
+:root {
+  /* Protip, ask your designer for a named list :) */
+  --background-color: #ffffff;
+  --text-color: rgb(51, 51, 51);
+  --accent-color: #1661EE;
+  --accent-color-faded: rgba(0, 0, 255, 0.5);
 }
 
+
+/* === Default cascade === */
+html {
+  color: var(--text-color);
+  background-color: var(--background-color);
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+/* === Opionated tweaks === */
+html,
+body {
+  position: relative;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--accent-color);
+  color: var(--background-color);
+}
+
+/* Keyboard focus styles */
+[data-focus-visible-added] {
+  outline-offset: 2px;
+  outline: 2px dashed var(--accent-color-faded);
+}
+
+/* Disable focus styles for mouse focuses */
+:focus:not([data-focus-visible-added]) {
+  outline: none;
+}
+
+img,
+video,
+iframe,
+input,
+select,
+textarea {
+  max-width: 100%;
+  height: auto;
+}
+
+section, .section {
+  padding: 1rem 0;
+}
+
+
+/* === Typography === */
+h1, .h1,
+h2, .h2,
+h3, .h3,
+h4, .h4,
+h5, .h5,
+h6, .h6 {
+  font-weight: 500;
+  margin: 1rem 0;
+}
+
+h1, .h1 {
+  font-size: 3rem;
+  font-weight: 300;
+}
+h2, .h2 {
+  font-size: 1.75rem;
+  font-weight: 400;
+}
+h3, .h3 {
+  font-size: 1.17rem;
+}
+h4, .h4 {
+  font-size: 1rem;
+}
+h5, .h5 {
+  font-size: 0.83rem;
+}
+h6, .h6 {
+  font-size: 0.67rem;
+}
+
+p, .paragraph {
+  margin: 1rem 0;
+  font-size: 1rem;
+}
+
+a, .link {
+  text-decoration: underline;
+  color: inherit;
+}
+
+h1 a, .h1 a,
+h2 a, .h2 a,
+h3 a, .h3 a,
+h4 a, .h4 a,
+h5 a, .h5 a,
+h6 a, .h6 a {
+  text-decoration: none;
+}
+
+b, strong {
+  font-weight: 600;
+}
+
+
+
+/* === Buttons === */
+button, .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 1px solid currentColor;
+  border-radius: 0.25rem;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  color: var(--background-color);
+  background-color: var(--text-color);
+}
+button:hover,
+.button:hover {
+  opacity: 0.9;
+}
+button:active,
+.button:active {
+  opacity: 0.8;
+}
+button.outlined:active,
+.button.outlined:active {
+  color: var(--text-color);
+  background-color: var(--background-color);
+}
+
+
+
+/* === Forms === */
+input:not([type="radio"]):not([type="checkbox"]):not([type="color"]),
+select,
+textarea {
+  display: block;
+  border-radius: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  width: 100%;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--text-color);
+}
+
+textarea {
+  min-height: 2.625rem;
+}
+
+select {
+  padding-right: 1.25rem;
+}
+
+
+
+/* === Misc === */
+code {
+  font-family: 'Fira Code', monospace;
+  display: inline-block;
+  background-color: var(--alt-background-color);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+pre code {
+  display: block;
+  padding: 1rem;
+}
+
+hr {
+  margin: 4rem 0;
+  border: none;
+  height: 1px;
+  background-color: currentColor;
+}
+
+
+
 .app {
-  margin: 0 auto;
   position: relative;
   min-height: 100vh;
 }
@@ -15,77 +209,27 @@ body {
   max-height: 100vh;
 }
 
+
 .main-content {
-  padding: 1rem 1.25rem;
-  max-width: 1024px;
+  padding: 1rem;
+  max-width: 700px;
   position: relative;
 }
 
-.secondary-menu {
-  position: fixed;
-  top: 1.25rem;
-  right: 1.25rem;
-  height: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  display: none;
-  z-index: 5;
-}
-.secondary-menu a {
-  color: inherit;
-  text-decoration: none;
-  position: relative;
-}
-.secondary-menu a:hover {
-  color: #546067;
-}
-.secondary-menu a:hover::before {
-  content: '';
-  display: block;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: var(--menu-width);
-  right: 0;
-  background-color: rgba(255, 255, 255, 0.8);
-  width: 100%;
-  height: 100%;
-  min-height: 50vh;
-  pointer-events: none;
-  z-index: -1;
-}
-.secondary-menu a.active {
-  color: var(--dark-blue);
-}
-
-
-/* Fix for links in titles in markdown files */
-h1 a {
-  text-decoration: none;
-}
 
 
 
 @media (min-width: 992px) {
   .app {
+
   }
   .main-content {
-    margin-left: var(--menu-width);
-    margin-bottom: 6rem;
-    padding: 1.25rem;
-  }
-  .secondary-menu {
-    display: flex;
+    margin: 3rem auto 3rem 32vw;
   }
 }
 
 
-@media (min-width: 1320px) {
-  body {
-    --menu-width: 24rem;
-  }
-}
+
 
 
 pre {
@@ -98,7 +242,7 @@ code {
   display: inline-block !important;
   color: var(--dark-blue) !important;
   font-family: 'Fira Code', monospace !important;
-  font-size: 1rem !important;
+  font-size: 0.8rem !important;
   padding: 0.25rem 0.5rem !important;
   background-color: #f6f8fa !important;
   text-shadow: none !important;
