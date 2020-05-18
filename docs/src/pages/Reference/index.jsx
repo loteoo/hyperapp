@@ -2,6 +2,6 @@ import content from './reference.md'
 
 export default (state) => (
   <div>
-    <div innerHTML={content} />
+    <div class="markdown-content" innerHTML={content} />
   </div>
 )

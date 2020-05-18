@@ -1,28 +1,11 @@
 # Reference
+
 ### Overview of hyperapp's core APIs
 
 Below is a consice recap of hyperapp's core APIs, packed with information about the framework.
 
 It's geared towards developers who already have some level of understanding on what hyperapp is and want to see documentation for it's concepts.
 
-- [`h()`](#h)
-  - [on<i>event</i>](#onieventi-props)
-  - [key](#key-prop)
-  - [style](#style-prop)
-  - [class](#class-prop)
-- [`app()`](#app)
-  - [init](#init-prop)
-  - [view](#view-prop)
-  - [subscriptions](#subscriptions-prop)
-  - [node](#node-prop)
-  - [middleware](#middleware-prop)
-- [`Lazy()`](#lazy)
-- [actions](#actions)
-  - [Simple](#simple-action-state--nextstate)
-  - [Complex](#complex-action-state-params--nextstate)
-  - [With side-effects](#action-with-side-effects-state--nextstate-effects)
-- [effects](#effects)
-- [subscriptions](#subscriptions)
 
 ## h()
 

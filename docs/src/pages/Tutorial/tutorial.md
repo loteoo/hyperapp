@@ -2,31 +2,6 @@
 
 Welcome! If you're new to Hyperapp, you've found the perfect place to start learning.
 
-Table of contents
-
-- [The Set-up](#setup)
-- [Hello World](#helloworld)
-- [View](#view)
-  - [Virtual Nodes](#virtualnodes)
-  - [Rendering to the DOM](#rendertodom)
-  - [Composing the view with reusable functions](#composingview)
-- [State](#state)
-- [Actions](#actions)
-  - [Reacting to events in the DOM](#reacting)
-  - [Capturing event-data in actions](#eventdata)
-  - [Actions with custom payloads](#custompayloads)
-  - [Payload filters](#payloadfilters)
-- [Effects](#effects)
-  - [Declaring effects in actions](#declaringeffects)
-  - [Effect functions and `dispatch`](#effectfunctions)
-  - [Running effects on initialization](#effectsoninit)
-  - [Effect creators](#effectcreators)
-  - [Tracking state for ansynchronous effects](#trackingasync)
-- [Subscriptions](#subscriptions)
-  - [Subscription functions](#subscriptionfunctions)
-  - [Subscribing](#subscribing)
-- [Conclusion](#conclusion)
-
 ## The Set-up <a name="setup"></a>
 
 Together we'll build a simple newsreader-like application. As we do, we'll work
