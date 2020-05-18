@@ -270,6 +270,19 @@ hr {
   grid-column: 1;
   grid-row: 1;
   margin: 0 !important;
+  position: relative;
+}
+
+.hero h1 sup {
+  margin-left: 1rem;
+  color: var(--accent-color);
+  position: absolute;
+  top: -1rem;
+}
+.hero h1 sup code {
+  border: 1px solid var(--accent-color);
+  font-size: 1rem;
+  background-color: transparent;
 }
 
 

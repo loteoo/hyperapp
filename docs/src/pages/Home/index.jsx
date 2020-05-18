@@ -11,7 +11,7 @@ const SlackLogo = () => <svg xmlns='http://www.w3.org/2000/svg' width='512' heig
 export default (state) => (
   <div>
     <div class="hero">
-      <h1>Hyperapp</h1>
+      <h1>Hyperapp<sup><a href="#"><code>2.0.4</code></a></sup></h1>
       <h2>The tiny framework for building web interfaces</h2>
       <div class="social">
         <GithubLogo />
