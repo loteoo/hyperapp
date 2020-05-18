@@ -20,6 +20,35 @@ export default (state) => (
       </div>
     </div>
     <hr />
+    <div class="features-grid">
+      <div class="feature">
+        <img style={{ width: '8rem' }} src={require('../../assets/faster-than-react.svg')} alt="faster than react" />
+        <h2>2x</h2>
+        <p>faster than react</p>
+      </div>
+      <div class="feature">
+        <img style={{ marginTop: '1rem' }} src={require('../../assets/so-small-cant-even.svg')} alt="it's so small, I can't even" />
+        <h2>1.8kB</h2>
+        <p>smaller than a favicon</p>
+      </div>
+      <div class="feature">
+        <img style={{ width: '4rem' }} src={require('../../assets/time-to-interactive.svg')} alt="time to interactive" />
+        <h2>10ms</h2>
+        <p>time to interactive</p>
+      </div>
+    </div>
+    <hr />
+    {/* <div class="info-grid">
+      <img src={require('../../assets/do-more-with-less.svg')} alt="do more with less" />
+      <h2>do more with less</h2>
+      <p>We have minimized the concepts you need to learn to be productive. views, actions, effects, and subscriptions are all pretty easy to get to grips with and work together seamlessly.</p>
+      <img src={require('../../assets/write-what-not-how.svg')} alt="write what, not how" />
+      <h2>write what, not how</h2>
+      <p>With a declarative syntax that's easy to read and natural to write, Hyperapp is your tool of choice to develop purely functional, feature-rich, browser-based applications.</p>
+      <img src={require('../../assets/hypercharged.svg')} alt="hypercharged" />
+      <h2>hypercharged</h2>
+      <p>Hyperapp is a modern VDOM engine, state management solution, and application design pattern all-in-one. once you learn to use it, there'll be no end to what you can do.</p>
+    </div> */}
     <div innerHTML={content} />
   </div>
 )
