@@ -4,17 +4,24 @@
 @import 'sanitize.css/typography.css';
 @import 'sanitize.css/forms.css';
 
+
 /* Import font configurations */
 @import './assets/fonts/IBMPlexSans/ibm_plex_sans.css';
 @import './assets/fonts/FiraCode/fira_code.css';
+
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
 
 /* === Global variables === */
 :root {
   /* Protip, ask your designer for a named list :) */
   --background-color: #ffffff;
-  --text-color: rgb(51, 51, 51);
+  --text-color: #3c4b62;
+  --title-color: #272a2f;
   --accent-color: #1661EE;
   --accent-color-faded: rgba(0, 0, 255, 0.5);
+  --menu-width: 12rem;
+  --alt-background-color: #f5f7fa;
 }
 
 
@@ -22,7 +29,8 @@
 html {
   color: var(--text-color);
   background-color: var(--background-color);
-  font-family: 'IBM Plex Sans', sans-serif;
+  font-family: 'Inter', sans-serif;
+  scroll-behavior: smooth;
 }
 
 /* === Opionated tweaks === */
@@ -30,7 +38,6 @@ html,
 body {
   position: relative;
   max-width: 100%;
-  overflow-x: hidden;
 }
 
 ::selection {
@@ -71,20 +78,22 @@ h3, .h3,
 h4, .h4,
 h5, .h5,
 h6, .h6 {
-  font-weight: 500;
-  margin: 1rem 0;
+  color: var(--title-color);
+  margin: 2em 0 1rem 0;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
 }
 
 h1, .h1 {
-  font-size: 3rem;
-  font-weight: 300;
+  font-size: 4rem;
+  letter-spacing: -0.05em;
 }
 h2, .h2 {
   font-size: 1.75rem;
-  font-weight: 400;
 }
 h3, .h3 {
-  font-size: 1.17rem;
+  font-size: 1.33rem;
 }
 h4, .h4 {
   font-size: 1rem;
@@ -116,7 +125,8 @@ h6 a, .h6 a {
 }
 
 b, strong {
-  font-weight: 600;
+  font-weight: 700;
+  color: var(--title-color);
 }
 
 
@@ -178,11 +188,13 @@ select {
 
 /* === Misc === */
 code {
-  font-family: 'Fira Code', monospace;
   display: inline-block;
   background-color: var(--alt-background-color);
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
+  font-size: 0.875rem;
+  /* font-family: 'Fira Code', sans-serif; */
+  font-weight: 500;
 }
 
 pre code {
@@ -191,10 +203,10 @@ pre code {
 }
 
 hr {
-  margin: 4rem 0;
+  margin: 2rem 0;
   border: none;
-  height: 1px;
-  background-color: currentColor;
+  height: 0.25rem;
+  background-color: var(--alt-background-color);
 }
 
 
@@ -202,6 +214,7 @@ hr {
 .app {
   position: relative;
   min-height: 100vh;
+  max-width: 992px;
 }
 
 .noBodyScroll {
@@ -212,19 +225,32 @@ hr {
 
 .main-content {
   padding: 1rem;
-  max-width: 700px;
   position: relative;
 }
+
+.main-content h1:first-of-type {
+  margin-top: 2rem;
+}
+
+
+
 
 
 
 
 @media (min-width: 992px) {
   .app {
-
+    margin: 3rem auto;
+    display: flex;
   }
   .main-content {
-    margin: 3rem auto 3rem 32vw;
+    width: calc(100% - var(--menu-width));
+  }
+  .main-title {
+    font-size: 3rem;
+    line-height: 1.2;
+    margin: 1rem 0 !important;
+    max-width: 36rem;
   }
 }
 
@@ -232,24 +258,164 @@ hr {
 
 
 
-pre {
-  padding: 0 !important;
-  text-shadow: none !important;
-  background-color: transparent !important;
+
+
+
+
+
+
+
+
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  z-index: 10;
+  width: 100%;
+
 }
 
-code {
-  display: inline-block !important;
-  color: var(--dark-blue) !important;
-  font-family: 'Fira Code', monospace !important;
-  font-size: 0.8rem !important;
-  padding: 0.25rem 0.5rem !important;
-  background-color: #f6f8fa !important;
-  text-shadow: none !important;
+
+
+.logo {
+  position: relative;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  display: block;
+  width: 100%;
 }
 
-pre code {
-  display: block !important;
-  padding: 1rem !important;
+.logo::after {
+  content: '';
+  display: block;
+  padding-top: 82%;
+}
+
+.logo img {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+
+
+
+.logo .v1 {
+  display: none;
+}
+.logo:hover .v2 {
+  display: none !important;
+}
+.logo:hover .v1 {
+  display: block;
+}
+
+
+.menu-toggler {
+  position: relative;
+  z-index: 15;
+  font-size: 0;
+  padding: 0;
+  border: none;
+}
+.menu-toggler img {
+  width: 2.5rem;
+}
+.menu-toggler:focus {
+  background-color: transparent;
+}
+
+
+.menu {
+  z-index: 10;
+  min-height: 100vh;
+  padding: 5rem 1rem 1rem 1rem;
+  display: none;
+}
+.menu.opened {
+  display: block;
+}
+
+.main-links a {
+  display: block;
+  padding: 0.25rem 1rem;
+  border-radius: 0.25rem;
+  text-decoration: none;
+  font-size: 1.5rem;
+  /* font-family: 'Fira Code'; */
+  margin: 0.25rem 0;
+}
+.main-links a:hover {
+  background-color: #f8f8fc;
+}
+.main-links a.active {
+  color: #386dff;
+  background-color: #f2f4ff;
+}
+
+
+.sub-links {
+  margin: 3rem 0;
+}
+
+.sub-links a {
+  display: block;
+  text-decoration: none;
+  font-weight: 400;
+  margin: 0 1rem;
+  color: #a1aab8;
+  font-size: 0.875rem;
+}
+.sub-links > ul > li > a {
+  font-size: 1rem;
+  color: #697384;
+  margin-top: 1rem;
+  position: relative;
+}
+.sub-links > ul > li > a::before {
+  content: '—';
+  margin-right: 0.5rem;
+  position: absolute;
+  right: 100%;
+}
+
+
+
+
+@media (min-width: 640px) {
+  .site-header {
+  }
+  .menu {
+    padding: 0;
+  }
+}
+
+
+
+
+@media (min-width: 992px) {
+  .site-header {
+    flex-direction: column;
+    justify-content: flex-start;
+    width: var(--menu-width);
+  }
+  .menu-toggler {
+    display: none;
+  }
+  .menu {
+    position: sticky;
+    top: 3rem;
+    display: block;
+    background: none;
+    min-height: auto;
+    margin: 3rem 0;
+  }
 }
 

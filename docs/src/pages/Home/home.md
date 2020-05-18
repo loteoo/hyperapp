@@ -1,5 +1,4 @@
 
-
 **Do more with less** - We have minimized the concepts you need to learn to be productive. Views, actions, effects, and subscriptions are all pretty easy to get to grips with and work together seamlessly.
 
 **Write what, not how** - With a declarative syntax that's easy to read and natural to write, Hyperapp is your tool of choice to develop purely functional, feature-rich, browser-based applications.
@@ -72,6 +71,3 @@ Is anything wrong, unclear, missing? Help us [improve this page](https://github.
 - [Awesome](https://github.com/jorgebucaran/awesome-hyperapp)
 - [/r/hyperapp](https://www.reddit.com/r/hyperapp)
 
-## License
-
-[MIT](LICENSE.md)

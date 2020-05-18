@@ -1,13 +1,14 @@
-import intro from '../../../../README.md'
-import tutorial from '../../../tutorial.md'
-import api from '../../../api.md'
+import content from './home.md'
 
 export default (state) => (
   <div>
-    <div innerHTML={intro} />
+    <div class="hero">
+      <h1 class="main-title">The tiny framework for building web interfaces</h1>
+      <div class="social">
+
+      </div>
+    </div>
     <hr />
-    <div innerHTML={api} />
-    <hr />
-    <div innerHTML={tutorial} />
+    <div innerHTML={content} />
   </div>
 )

@@ -1,32 +1,26 @@
 /* eslint-disable indent */
 import { app } from 'hyperapp'
 
-import { request } from './fx/http'
-
-// App init imports
-import { WindowScrolled, PopState } from './subscriptions'
-import { WindowScroll, ParseUrl, SetSearchData } from './actions'
-import { HighLight } from './effects'
 
 // Components
 import Header from './components/Header'
-import Footer from './components/Footer'
+
 
 import Home from './pages/Home'
+import Reference from './pages/Reference'
+import Tutorial from './pages/Tutorial'
 import FourOhFour from './pages/FourOhFour'
+
 
 // Initialize the app on the #app div
 app({
-  init: [
-    ParseUrl({
-        menuOpened: false,
-        count: 0
-      },
-      window.location.pathname + window.location.search
-    ),
-    HighLight()
-  ],
+  init: {
+    menuOpened: false,
+    count: 0
+  },
   view: (state) => {
+    console.log(state);
+
     return (
       <div
         id="top"
@@ -36,20 +30,17 @@ app({
         }}
       >
         <Header {...state} />
-        <main key={state.location.path} class="main-content">
+        <main class="main-content">
           {
-            state.location.path === '/'
-              ? <Home {...state} />
+            window.location.pathname === '/' ? <Home {...state} />
+              : window.location.pathname === '/reference' ? <Reference {...state} />
+              : window.location.pathname === '/tutorial' ? <Tutorial {...state} />
               : <FourOhFour {...state} />
           }
-          <Footer />
+          {/* {Reference(state)} */}
         </main>
       </div>
     )
   },
-  node: document.getElementById('app-container'),
-  subscriptions: () => [
-    WindowScrolled({ action: WindowScroll }),
-    PopState({ action: ParseUrl })
-  ]
+  node: document.getElementById('app-container')
 })

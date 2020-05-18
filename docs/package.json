@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@hyperapp/http": "0.0.2",
+    "@mrbarrysoftware/hyperapp-router": "0.0.1-beta.7",
     "glob": "^7.1.6",
     "hyperapp": "^2.0.4",
     "sanitize.css": "^11.0.0"
