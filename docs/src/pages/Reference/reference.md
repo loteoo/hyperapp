@@ -261,11 +261,11 @@ Higher order functions that changes the `dispatch` that hyperapp will use. They 
 ```javascript
 Lazy({ render, ...props })
 ```
-Lazy is higher order function (wrapper function) to cache your view functions based on props you pass into them.
+The Lazy function is a higher order function (wrapper function) that caches the results of a view function, based on the props that are passed into it.
 
-It's a helps you achieve a performance optimization technique commonly refered to as memoization.
+It's a helps you pull off a performance optimization technique that is commonly refered to as memoization.
 
-Immutability in hyperapp guarantees that if two things are referentially equal, they must be identical. This makes it safe for hyperapp to only re-compute your Lazy components when values passed through their props change.
+The immutability in hyperapp guarantees that if two things are referentially equal, they must be identical. This makes it safe for hyperapp to only re-compute your Lazy components when values passed through their props change.
 
 - **render** - Function that returns a virtual DOM. *Must be a named function.*   
 - **...props** - Props to pass down to the view function. The underlying view is re-computed when those change.   
@@ -342,9 +342,9 @@ Actions with side-effects can also take in params, just like a complex action. I
 ```javascript
 [fx, params]
 ```
-Tuples that describe a side-effect that needs to run.
+An effect is a tuple that describe a side-effect that needs to run.
 
-Effects are only descriptions of work that needs to be executed, they do not do any side-effects themselves. This allows your application to remain pure while also interacting with the outside world. 
+Effects are only descriptions of work that needs to be executed, they do not run any side-effects themselves. This allows your application to remain pure while also interacting with the outside world. 
 
 - **fx** - Effect runner.   
 - **params** Data to be passed to the effect runner.
@@ -389,7 +389,7 @@ const GetPizzas = (state) => [
 [sub, params]
 ```
 
-Tuples that describe the bindings between your app and external events.
+A subscription is a tuple that describes a binding between your app and an external event.
 
 They allow you to dispatch [actions](#actions) based on external events, such as websockets, keystrokes or any other events outside hyperapp using a declarative API instead of an event-driven one.
 
