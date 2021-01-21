@@ -1,0 +1,16 @@
+{
+  "name": "@hyperapp/context",
+  "description": "Pass values down to parts of your view",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "index.js",
+  "license": "MIT",
+  "repository": "https://github.com/jorgebucaran/hyperapp/tree/master/pkg/context",
+  "files": [
+    "*.js*"
+  ],
+  "keywords": [
+    "hyperapp",
+    "context"
+  ]
+}
